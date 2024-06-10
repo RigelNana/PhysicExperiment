@@ -1,3 +1,4 @@
+
 <template>
   <div id="app">
     <div class="sidebar-container">
@@ -5,55 +6,56 @@
         <button @click="toggleSidebar">☰</button>
         <transition name="fade">
           <div class="menu" v-show="isExpanded">
-            <div class="menu-item">功能1</div>
-            <div class="menu-item">功能2</div>
-            <div class="menu-item">功能3</div>
+            <div class="menu-item" @click="selectTable('1')">杨氏模量</div>
+            <div class="menu-item" @click="selectTable('2')">功能2</div>
+            <div class="menu-item" @click="selectTable('3')">功能3</div>
           </div>
         </transition>
       </div>
     </div>
     <div class="content">
-      <table>
-        <thead>
-        <tr>
-          <th>名称</th>
-          <th>值</th>
-          <th>计算结果</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(item, index) in items" :key="index">
-          <td><input v-model="item.name" type="text" /></td>
-          <td><input v-model.number="item.value" type="number" @input="updateValues" /></td>
-          <td>{{ calculateValue(item) }}</td>
-        </tr>
-        </tbody>
-      </table>
+      <component :is="tables[currentTable]"></component>
     </div>
   </div>
 </template>
 
 <script>
+
+import yangMod from "@/components/YangMod.vue";
+import YangMod from "@/components/YangMod.vue";
 export default {
+  components: {YangMod},
   data() {
     return {
       isExpanded: false,
-      items: [
-        { name: 'Item 1', value: 0 },
-        { name: 'Item 2', value: 0 },
-        { name: 'Item 3', value: 0 },
-      ],
+      currentTable: '1',
+      tables: {
+        '1': yangMod,
+        // '功能2': [
+        //   { name: 'Item A', value: 100 },
+        //   { name: 'Item B', value: 200 },
+        //   { name: 'Item C', value: 300 },
+        // ],
+        // '功能3': [
+        //   { name: 'Item X', value: 1000 },
+        //   { name: 'Item Y', value: 2000 },
+        //   { name: 'Item Z', value: 3000 },
+        // ]
+      }
     };
   },
   methods: {
     toggleSidebar() {
       this.isExpanded = !this.isExpanded;
     },
-    updateValues() {
-
-    },
-    calculateValue(item) {
-      return item.value * 2;
+    // updateValues() {
+    //
+    // },
+    // calculateValue(item) {
+    //   return item.value * 2;
+    // },
+    selectTable(table) {
+      this.currentTable = table;
     },
   },
 };
@@ -100,11 +102,17 @@ export default {
 
 .menu-item {
   margin: 10px 0;
-  text-align: left;
-  padding-left: 20px;
+  text-align: center;
+  padding-left: 0px;
   opacity: 1;
-}
+  cursor: pointer;
+  text-decoration: none;
 
+
+}
+.menu-item:hover{
+  text-decoration: underline;
+}
 button {
   background: none;
   border: none;
